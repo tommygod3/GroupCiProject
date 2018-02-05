@@ -9,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "Camera/CameraComponent.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h" 
+#include "PaperFlipbook.h"
 
 DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
@@ -17,29 +19,46 @@ DEFINE_LOG_CATEGORY_STATIC(SideScrollerCharacter, Log, All);
 
 ACiProjectCharacter::ACiProjectCharacter()
 {
+	//Load in flipbooks
+	struct FConstructorStatics
+	{
+		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> RunningAnimationAsset;
+		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> IdleAnimationAsset;
+		FConstructorStatics()
+			: RunningAnimationAsset(TEXT("PaperFlipbook'/Game/Sprites/Flipbooks/Moving.Moving'"))
+			, IdleAnimationAsset(TEXT("PaperFlipbook'/Game/Sprites/Flipbooks/Idle.Idle'"))
+		{
+		}
+	};
+	static FConstructorStatics ConstructorStatics;
+
+	RunningAnimation = ConstructorStatics.RunningAnimationAsset.Get();
+	IdleAnimation = ConstructorStatics.IdleAnimationAsset.Get();
+
+
 	// Use only Yaw from the controller and ignore the rest of the rotation.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// Set the size of our collision capsule.
-	GetCapsuleComponent()->SetCapsuleHalfHeight(96.0f);
-	GetCapsuleComponent()->SetCapsuleRadius(40.0f);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(21.66f);
+	GetCapsuleComponent()->SetCapsuleRadius(12.0f);
 
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 500.0f;
-	CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 75.0f);
+	CameraBoom->TargetArmLength = 600.0f;
+	CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 0.0f);
 	CameraBoom->bAbsoluteRotation = true;
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->RelativeRotation = FRotator(0.0f, -90.0f, 0.0f);
 	
 
-	// Create an orthographic camera (no perspective) and attach it to the boom
+	// Create an perspective camera and attach it to the boom
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
-	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
-	SideViewCameraComponent->OrthoWidth = 2048.0f;
+	SideViewCameraComponent->ProjectionMode = ECameraProjectionMode::Perspective;
+	SideViewCameraComponent->FieldOfView = 90;
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 
 	// Prevent all automatic rotation behavior on the camera, character, and camera component
@@ -49,9 +68,9 @@ ACiProjectCharacter::ACiProjectCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	// Configure character movement
-	GetCharacterMovement()->GravityScale = 2.0f;
+	GetCharacterMovement()->GravityScale = 1.0f;
 	GetCharacterMovement()->AirControl = 0.80f;
-	GetCharacterMovement()->JumpZVelocity = 1000.f;
+	GetCharacterMovement()->JumpZVelocity = 400.f;
 	GetCharacterMovement()->GroundFriction = 3.0f;
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
@@ -119,7 +138,7 @@ void ACiProjectCharacter::MoveRight(float Value)
 	/*UpdateChar();*/
 
 	// Apply the input to the character motion
-	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), Value);
+	AddMovementInput(FVector(100.0f, 0.0f, 0.0f), Value);
 }
 
 void ACiProjectCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
