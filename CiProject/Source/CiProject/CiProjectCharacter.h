@@ -2,9 +2,15 @@
 
 #pragma once
 
+
+
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+
+#include "Runtime/Engine/Classes/Engine/StaticMeshActor.h"
+
 #include "CiProjectCharacter.generated.h"
+
 
 class UTextRenderComponent;
 
@@ -60,6 +66,7 @@ protected:
 
 public:
 	ACiProjectCharacter();
+	
 
 	/** Returns SideViewCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }

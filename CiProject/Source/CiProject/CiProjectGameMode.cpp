@@ -7,7 +7,5 @@ ACiProjectGameMode::ACiProjectGameMode()
 {
 	// Set default pawn class to our character
 	DefaultPawnClass = ACiProjectCharacter::StaticClass();
-	
-
 
 }

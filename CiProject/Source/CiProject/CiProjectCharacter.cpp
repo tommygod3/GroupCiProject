@@ -25,8 +25,8 @@ ACiProjectCharacter::ACiProjectCharacter()
 		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> RunningAnimationAsset;
 		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> IdleAnimationAsset;
 		FConstructorStatics()
-			: RunningAnimationAsset(TEXT("PaperFlipbook'/Game/Sprites/Flipbooks/Moving.Moving'"))
-			, IdleAnimationAsset(TEXT("PaperFlipbook'/Game/Sprites/Flipbooks/Idle.Idle'"))
+			: RunningAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Walking.Walking'"))
+			, IdleAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Standing.Standing'"))
 		{
 		}
 	};
@@ -68,9 +68,9 @@ ACiProjectCharacter::ACiProjectCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	// Configure character movement
-	GetCharacterMovement()->GravityScale = 1.0f;
-	GetCharacterMovement()->AirControl = 0.80f;
-	GetCharacterMovement()->JumpZVelocity = 400.f;
+	GetCharacterMovement()->GravityScale = 4.0f;
+	GetCharacterMovement()->AirControl = 2.0f;
+	GetCharacterMovement()->JumpZVelocity = 1400.f;
 	GetCharacterMovement()->GroundFriction = 3.0f;
 	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
 	GetCharacterMovement()->MaxFlySpeed = 600.0f;
