@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Prefab.h"
+
 #include "LevelGenerator.generated.h"
 
 UCLASS()
@@ -15,14 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	ALevelGenerator();
 
-	UPROPERTY (EditAnywhere)
-	TSubclassOf<class AStaticMeshActor> PF1;
-
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AStaticMeshActor> PF2;
-
-	UPROPERTY(EditAnywhere)
-	int32 NumberOfPrefabs;
+	TArray<TSubclassOf<class APrefab>> Prefabs;
 
 	UPROPERTY(EditAnywhere)
 	int32 NumberOfRooms;
@@ -34,9 +30,5 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	
-
-	
 	
 };
