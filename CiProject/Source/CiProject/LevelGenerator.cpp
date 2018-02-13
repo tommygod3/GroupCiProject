@@ -23,7 +23,6 @@ void ALevelGenerator::BeginPlay()
 
 void ALevelGenerator::Spawn()
 {
-	FVector Shifter = Prefabs[0]->GetDefaultObject<APrefab>()->rightConnector - Prefabs[0]->GetDefaultObject<APrefab>()->leftConnector;
 	if (Prefabs[0]!=nullptr)
 	{
 		UWorld* world = GetWorld();
@@ -32,10 +31,11 @@ void ALevelGenerator::Spawn()
 			FVector Location(0.0f, 0.0f, 0.0f);
 			FRotator Rotation(0.0f, 0.0f, 0.0f);
 			FActorSpawnParameters SpawnInfo;
-			for (int i = 0; i < NumberOfRooms; i++)
+			world->SpawnActor<APrefab>(Prefabs[0], Location, Rotation, SpawnInfo);
+			for (int i = 1; i < Prefabs.Num(); i++)
 			{
-				FVector Shift = Shifter * (i);
-				world->SpawnActor<APrefab>(Prefabs[0], Location + (Shift), Rotation, SpawnInfo);
+				Location = Location + Prefabs[i-1]->GetDefaultObject<APrefab>()->rightBoundary - Prefabs[i]->GetDefaultObject<APrefab>()->leftBoundary;
+				world->SpawnActor<APrefab>(Prefabs[i], Location, Rotation, SpawnInfo);
 			}
 		}
 	}

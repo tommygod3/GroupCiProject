@@ -26,17 +26,41 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-	FVector leftConnector;
+	FVector leftBoundary;
 	
 	UFUNCTION(BlueprintCallable)
-	FVector getLeftConnector();
+	FVector getLeftBoundary();
 
 	UPROPERTY(EditAnywhere)
-	FVector rightConnector;
+	bool leftBoundaryIsConnector;
+
+	UPROPERTY(EditAnywhere)
+	FVector rightBoundary;
 
 	UFUNCTION(BlueprintCallable)
-	FVector getRightConnector();
+	FVector getRightBoundary();
+
+	UPROPERTY(EditAnywhere)
+	bool rightBoundaryIsConnector;
+
+	UPROPERTY(EditAnywhere)
+	FVector topBoundary;
+
+	UFUNCTION(BlueprintCallable)
+	FVector getTopBoundary();
+
+	UPROPERTY(EditAnywhere)
+	bool topBoundaryIsConnector;
+
+	UPROPERTY(EditAnywhere)
+	FVector bottomBoundary;
+
+	UFUNCTION(BlueprintCallable)
+	FVector getBottomBoundary();
+
+	UPROPERTY(EditAnywhere)
+	bool bottomBoundaryIsConnector;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Set")
-	void CalledFromCpp();
+	void SetBoundaries();
 };

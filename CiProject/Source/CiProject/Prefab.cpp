@@ -18,7 +18,7 @@ void APrefab::BeginPlay()
 
 void APrefab::OnConstruction(const FTransform& transform)
 {
-	CalledFromCpp();
+	SetBoundaries();
 }
 
 // Called every frame
@@ -28,12 +28,22 @@ void APrefab::Tick(float DeltaTime)
 
 }
 
-FVector APrefab::getLeftConnector()
+FVector APrefab::getLeftBoundary()
 {
-	return leftConnector;
+	return leftBoundary;
 }
 
-FVector APrefab::getRightConnector()
+FVector APrefab::getRightBoundary()
 {
-	return rightConnector;
+	return rightBoundary;
+}
+
+FVector APrefab::getTopBoundary()
+{
+	return topBoundary;
+}
+
+FVector APrefab::getBottomBoundary()
+{
+	return bottomBoundary;
 }
