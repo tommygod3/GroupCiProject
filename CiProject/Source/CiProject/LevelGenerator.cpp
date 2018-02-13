@@ -23,9 +23,7 @@ void ALevelGenerator::BeginPlay()
 
 void ALevelGenerator::Spawn()
 {
-	
 	FVector Shifter = Prefabs[0]->GetDefaultObject<APrefab>()->rightConnector - Prefabs[0]->GetDefaultObject<APrefab>()->leftConnector;
-	//FVector Shifter(580.0f, 0.0f, 0.0f);
 	if (Prefabs[0]!=nullptr)
 	{
 		UWorld* world = GetWorld();

@@ -26,13 +26,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere)
-	FVector leftConnector = FVector(-100.0f, 0.0f, 10.0f);
+	FVector leftConnector;
 	
 	UFUNCTION(BlueprintCallable)
 	FVector getLeftConnector();
 
 	UPROPERTY(EditAnywhere)
-	FVector rightConnector = FVector(100.0f, 0.0f, 10.0f);
+	FVector rightConnector;
 
 	UFUNCTION(BlueprintCallable)
 	FVector getRightConnector();
