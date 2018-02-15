@@ -23,8 +23,13 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 NumberOfRooms;
 
+	UPROPERTY(EditAnywhere)
+	int32 Seed;
+
 	UFUNCTION(BlueprintCallable)
 	void Spawn();
+
+	void SpawnPrefab(FVector locationWorld, FVector locationRelative, char connector, int& spawned);
 
 protected:
 	// Called when the game starts or when spawned
