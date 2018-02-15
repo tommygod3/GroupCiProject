@@ -42,8 +42,8 @@ ACiProjectCharacter::ACiProjectCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Set the size of our collision capsule.
-	GetCapsuleComponent()->SetCapsuleHalfHeight(21.66f);
 	GetCapsuleComponent()->SetCapsuleRadius(12.0f);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(21.66f);
 
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -89,6 +89,7 @@ ACiProjectCharacter::ACiProjectCharacter()
     // 	TextComponent->SetRelativeLocation(FVector(35.0f, 5.0f, 20.0f));
     // 	TextComponent->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));
     // 	TextComponent->SetupAttachment(RootComponent);
+
 
 	// Enable replication on the Sprite component so animations show up when networked
 	GetSprite()->SetIsReplicated(true);
