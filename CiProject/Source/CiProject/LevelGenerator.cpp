@@ -25,6 +25,10 @@ void ALevelGenerator::BeginPlay()
 
 void ALevelGenerator::Spawn()
 {
+	if (NumberOfRooms == 0 || Prefabs.Num() == 0)
+	{
+		return;
+	}
 	if (Seed == 0)
 	{
 		srand(time(0));
