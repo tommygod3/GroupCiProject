@@ -5,14 +5,17 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Prefab.h"
+#include "CiProjectStructs.h"
 
 #include "LevelGenerator.generated.h"
+
+
 
 UCLASS()
 class CIPROJECT_API ALevelGenerator : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:	
 	// Sets default values for this actor's properties
 	ALevelGenerator();
@@ -21,7 +24,7 @@ public:
 	TArray<TSubclassOf<class APrefab>> Prefabs;
 
 	UPROPERTY(EditAnywhere)
-	int32 NumberOfRooms;
+	uint32 NumberOfRooms;
 
 	UPROPERTY(EditAnywhere)
 	int32 Seed;
@@ -29,11 +32,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Spawn();
 
-	void SpawnPrefab(FVector locationWorld, FVector locationRelative, char connector, int& spawned);
+	void SpawnPrefab(FVector locationWorld, FVector locationRelative, char connector);
+	void worldSpawnPrefab(unsigned int prefabNo, FVector location, UWorld* world);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	
+	unsigned int noOfConnectors(unsigned int prefabNo);
+	bool validatePrefab(unsigned int prefabNo);
+	FworldSpace getSpace(unsigned int prefabNo, FVector relativeLocation);
+
+	unsigned int spawned = 0;
+	unsigned int toBeSpawned = 0;
+
+	TArray<FworldSpace> spaces;
+
 };
+

@@ -47,3 +47,25 @@ FVector APrefab::getBottomBoundary()
 {
 	return bottomBoundary;
 }
+
+unsigned int APrefab::noOfConnectors()
+{
+	unsigned int count = 0;
+	if (rightBoundaryIsConnector)
+	{
+		count++;
+	}
+	if (leftBoundaryIsConnector)
+	{
+		count++;
+	}
+	if (topBoundaryIsConnector)
+	{
+		count++;
+	}
+	if (bottomBoundaryIsConnector)
+	{
+		count++;
+	}
+	return count;
+}

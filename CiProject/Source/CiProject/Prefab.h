@@ -10,7 +10,7 @@ UCLASS()
 class CIPROJECT_API APrefab : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:	
 	// Sets default values for this actor's properties
 	APrefab();
@@ -63,4 +63,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Set")
 	void SetBoundaries();
+
+	unsigned int noOfConnectors();
+
+
 };
