@@ -24,9 +24,15 @@ ACiProjectCharacter::ACiProjectCharacter()
 	{
 		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> RunningAnimationAsset;
 		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> IdleAnimationAsset;
+		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> JumpingAnimationAsset;
+		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> DyingAnimationAsset;
+		ConstructorHelpers::FObjectFinderOptional<UPaperFlipbook> DeadAnimationAsset;
 		FConstructorStatics()
 			: RunningAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Walking.Walking'"))
-			, IdleAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Standing.Standing'"))
+			, IdleAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Idle.Idle'"))
+			, JumpingAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Jumping.Jumping'"))
+			, DyingAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Dying.Dying'"))
+			, DeadAnimationAsset(TEXT("PaperFlipbook'/Game/Assets/Flipbooks/Dead.Dead'"))
 		{
 		}
 	};
@@ -34,6 +40,9 @@ ACiProjectCharacter::ACiProjectCharacter()
 
 	RunningAnimation = ConstructorStatics.RunningAnimationAsset.Get();
 	IdleAnimation = ConstructorStatics.IdleAnimationAsset.Get();
+	JumpingAnimation = ConstructorStatics.JumpingAnimationAsset.Get();
+	DyingAnimation = ConstructorStatics.DyingAnimationAsset.Get();
+	DeadAnimation = ConstructorStatics.DeadAnimationAsset.Get();
 
 
 	// Use only Yaw from the controller and ignore the rest of the rotation.
@@ -42,13 +51,13 @@ ACiProjectCharacter::ACiProjectCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Set the size of our collision capsule.
-	GetCapsuleComponent()->SetCapsuleRadius(12.0f);
-	GetCapsuleComponent()->SetCapsuleHalfHeight(21.66f);
+	GetCapsuleComponent()->SetCapsuleRadius(90);
+	GetCapsuleComponent()->SetCapsuleHalfHeight(240);
 
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 600.0f;
+	CameraBoom->TargetArmLength = 3000.0f;
 	CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 0.0f);
 	CameraBoom->bAbsoluteRotation = true;
 	CameraBoom->bDoCollisionTest = false;
@@ -68,12 +77,14 @@ ACiProjectCharacter::ACiProjectCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 
 	// Configure character movement
-	GetCharacterMovement()->GravityScale = 4.0f;
-	GetCharacterMovement()->AirControl = 5.0f;
-	GetCharacterMovement()->JumpZVelocity = 1000.f;
-	GetCharacterMovement()->GroundFriction = 3.0f;
-	GetCharacterMovement()->MaxWalkSpeed = 600.0f;
-	GetCharacterMovement()->MaxFlySpeed = 600.0f;
+	GetCharacterMovement()->GravityScale = 15.0f;
+	GetCharacterMovement()->AirControl = 5000.0f;
+	GetCharacterMovement()->JumpZVelocity = 5000.f;
+	GetCharacterMovement()->GroundFriction = 500.0f;
+	GetCharacterMovement()->MaxWalkSpeed = 4000.0f;
+	GetCharacterMovement()->MaxFlySpeed = 4000.0f;
+	GetCharacterMovement()->MaxAcceleration = 16386.0f;
+	//GetCharacterMovement()->FallingLateralFriction = 10000.0f;
 
 	// Lock character motion onto the XZ plane, so the character can't move in or out of the screen
 	GetCharacterMovement()->bConstrainToPlane = true;
@@ -104,8 +115,32 @@ void ACiProjectCharacter::UpdateAnimation()
 	const FVector PlayerVelocity = GetVelocity();
 	const float PlayerSpeedSqr = PlayerVelocity.SizeSquared();
 
-	// Are we moving or standing still?
-	UPaperFlipbook* DesiredAnimation = (PlayerSpeedSqr > 0.0f) ? RunningAnimation : IdleAnimation;
+	//What state is the player in
+	UPaperFlipbook* DesiredAnimation;
+	if (!dead)
+	{
+		if (currentHealth <= 0)
+		{
+			DesiredAnimation = DyingAnimation;
+		}
+		else if (PlayerSpeedSqr == 0.0f)
+		{
+			DesiredAnimation = IdleAnimation;
+		}
+		else if (PlayerVelocity.Z != 0.0f)
+		{
+			DesiredAnimation = JumpingAnimation;
+		}
+		else
+		{
+			DesiredAnimation = RunningAnimation;
+		}
+	}
+	else
+	{
+		DesiredAnimation = DeadAnimation;
+	}
+	
 	if( GetSprite()->GetFlipbook() != DesiredAnimation 	)
 	{
 		GetSprite()->SetFlipbook(DesiredAnimation);
@@ -117,8 +152,19 @@ void ACiProjectCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	
 	UpdateCharacter();	
+	if (currentHealth <= 0 && !dead)
+	{
+		killCharacter();
+	}
 }
 
+void ACiProjectCharacter::killCharacter()
+{
+	dead = 1;
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	this->DisableInput(PlayerController);
+
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Input

@@ -46,6 +46,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
 	class UPaperFlipbook* IdleAnimation;
 
+	// The animation to play while jumping
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* JumpingAnimation;
+
+	// The animation to play while dying
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* DyingAnimation;
+
+	// The animation to play while dead
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
+	class UPaperFlipbook* DeadAnimation;
+
 	/** Called to choose the correct animation to play based on the character's movement state */
 	void UpdateAnimation();
 
@@ -67,6 +79,15 @@ protected:
 public:
 	ACiProjectCharacter();
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Custom)
+	float currentHealth = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Custom)
+	bool dead = false;
+
+	UFUNCTION(BlueprintCallable)
+	void killCharacter();
+
 
 	/** Returns SideViewCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }

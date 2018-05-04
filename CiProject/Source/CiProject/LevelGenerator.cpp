@@ -127,7 +127,7 @@ void ALevelGenerator::SpawnPrefab(FVector locationWorld, FVector locationRelativ
 		}
 		if (blocked)
 		{
-			continue;
+			//continue;
 		}
 		//Make sure prefab has connector it is coming out of
 		if (connectorOld == 'L' && Prefabs[potential]->GetDefaultObject<APrefab>()->rightBoundaryIsConnector)
