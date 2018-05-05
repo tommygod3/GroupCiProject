@@ -79,7 +79,7 @@ ACiProjectCharacter::ACiProjectCharacter()
 	// Configure character movement
 	GetCharacterMovement()->GravityScale = 15.0f;
 	GetCharacterMovement()->AirControl = 5000.0f;
-	GetCharacterMovement()->JumpZVelocity = 5000.f;
+	GetCharacterMovement()->JumpZVelocity = 4300.f;
 	GetCharacterMovement()->GroundFriction = 500.0f;
 	GetCharacterMovement()->MaxWalkSpeed = 4000.0f;
 	GetCharacterMovement()->MaxFlySpeed = 4000.0f;

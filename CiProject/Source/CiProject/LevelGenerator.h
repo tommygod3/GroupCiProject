@@ -23,8 +23,20 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<class APrefab>> Prefabs;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Blueprints)
+	TSubclassOf<class AActor> gemBP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Blueprints)
+	TSubclassOf<class AActor> spikeBP;
+
 	UPROPERTY(EditAnywhere)
 	uint32 NumberOfRooms;
+
+	UPROPERTY(EditAnywhere)
+	uint32 NumberOfGems;
+
+	UPROPERTY(EditAnywhere)
+	uint32 NumberOfSpikes;
 
 	UPROPERTY(EditAnywhere)
 	int32 Seed;
@@ -34,6 +46,8 @@ public:
 
 	void SpawnPrefab(FVector locationWorld, FVector locationRelative, char connector);
 	void worldSpawnPrefab(unsigned int prefabNo, FVector location, UWorld* world);
+	void worldSpawnGems(unsigned int prefabNo, unsigned int numOfGems, FVector location, UWorld* world);
+	void worldSpawnSpikes(unsigned int prefabNo, unsigned int numOfSpikes, FVector location, UWorld* world);
 
 protected:
 	// Called when the game starts or when spawned

@@ -24,8 +24,13 @@ void ALevelGenerator::BeginPlay()
 
 void ALevelGenerator::Spawn()
 {
-	//Break if we want 0 rooms or have no prefabs
+	//Return if we want 0 rooms or have no prefabs
 	if (NumberOfRooms == 0 || Prefabs.Num() == 0)
+	{
+		return;
+	}
+	//Also return if we are requesting too many gems or spikes (can only have 2 per room)
+	if (2 * NumberOfSpikes > NumberOfRooms || 2 * NumberOfGems > NumberOfRooms)
 	{
 		return;
 	}
@@ -157,6 +162,7 @@ void ALevelGenerator::SpawnPrefab(FVector locationWorld, FVector locationRelativ
 	}
 	//Spawn it
 	worldSpawnPrefab(potential, potentialLocation, world);
+	
 	//Add to blocked space
 	spaces.Add(mySpace);
 	//Add ongoing to counter
@@ -198,9 +204,89 @@ void ALevelGenerator::worldSpawnPrefab(unsigned int prefabNo, FVector location, 
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
 	world->SpawnActor<APrefab>(Prefabs[prefabNo], location, Rotation, SpawnInfo);
+
+	worldSpawnGems(prefabNo, 1, location, world);
+	worldSpawnSpikes(prefabNo, 1, location, world);
+
 	//Increment number spawned and decrement number of prefabs in spawning process
 	spawned++;
 	toBeSpawned--;
+}
+
+void ALevelGenerator::worldSpawnGems(unsigned int prefabNo, unsigned int numOfGems, FVector location, UWorld* world)
+{
+	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FActorSpawnParameters SpawnInfo;
+	if (numOfGems == 0)
+	{
+		return;
+	}
+	else if (numOfGems == 1)
+	{
+		unsigned int gemNum = rand() % 2;
+		if (gemNum == 0)
+		{
+			FVector gemLocation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialGem1.GetLocation() + location;
+			world->SpawnActor<AActor>(gemBP, gemLocation, Rotation, SpawnInfo);
+		}
+		else
+		{
+			FVector gemLocation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialGem2.GetLocation() + location;
+			world->SpawnActor<AActor>(gemBP, gemLocation, Rotation, SpawnInfo);
+		}
+	}
+	else if (numOfGems == 2)
+	{
+		FVector gemLocation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialGem1.GetLocation() + location;
+		world->SpawnActor<AActor>(gemBP, gemLocation, Rotation, SpawnInfo);
+
+		FVector gemLocationSecond = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialGem2.GetLocation() + location;
+		world->SpawnActor<AActor>(gemBP, gemLocationSecond, Rotation, SpawnInfo);
+	}
+	else
+	{
+		return;
+	}
+
+}
+
+void ALevelGenerator::worldSpawnSpikes(unsigned int prefabNo, unsigned int numOfSpikes, FVector location, UWorld* world)
+{
+	FActorSpawnParameters SpawnInfo;
+	if (numOfSpikes == 0)
+	{
+		return;
+	}
+	else if (numOfSpikes == 1)
+	{
+		unsigned int spikeNum = rand() % 2;
+		if (spikeNum == 0)
+		{
+			FVector spikeLocation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike1.GetLocation() + location;
+			FRotator spikeRotation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike1.GetRotation().Rotator();
+			world->SpawnActor<AActor>(spikeBP, spikeLocation, spikeRotation, SpawnInfo);
+		}
+		else
+		{
+			FVector spikeLocation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike2.GetLocation() + location;
+			FRotator spikeRotation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike2.GetRotation().Rotator();
+			world->SpawnActor<AActor>(spikeBP, spikeLocation, spikeRotation, SpawnInfo);
+		}
+	}
+	else if (numOfSpikes == 2)
+	{
+		FVector spikeLocation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike1.GetLocation() + location;
+		FRotator spikeRotation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike1.GetRotation().Rotator();
+		world->SpawnActor<AActor>(spikeBP, spikeLocation, spikeRotation, SpawnInfo);
+
+		FVector spikeLocationSecond = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike2.GetLocation() + location;
+		FRotator spikeRotationSecond = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike2.GetRotation().Rotator();
+		world->SpawnActor<AActor>(spikeBP, spikeLocationSecond, spikeRotationSecond, SpawnInfo);
+	}
+	else
+	{
+		return;
+	}
 }
 
 unsigned int ALevelGenerator::noOfConnectors(unsigned int prefabNo)

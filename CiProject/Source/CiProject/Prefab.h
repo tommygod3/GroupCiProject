@@ -61,6 +61,30 @@ public:
 	UPROPERTY(EditAnywhere)
 	bool bottomBoundaryIsConnector;
 
+	UPROPERTY(EditAnywhere)
+	FTransform potentialGem1;
+
+	UFUNCTION(BlueprintCallable)
+	FTransform getPotentialGem1();
+
+	UPROPERTY(EditAnywhere)
+	FTransform potentialGem2;
+
+	UFUNCTION(BlueprintCallable)
+	FTransform getPotentialGem2();
+
+	UPROPERTY(EditAnywhere)
+	FTransform potentialSpike1;
+
+	UFUNCTION(BlueprintCallable)
+	FTransform getPotentialSpike1();
+
+	UPROPERTY(EditAnywhere)
+	FTransform potentialSpike2;
+
+	UFUNCTION(BlueprintCallable)
+	FTransform getPotentialSpike2();
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Set")
 	void SetBoundaries();
 

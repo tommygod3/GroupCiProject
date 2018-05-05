@@ -48,6 +48,26 @@ FVector APrefab::getBottomBoundary()
 	return bottomBoundary;
 }
 
+FTransform APrefab::getPotentialGem1()
+{
+	return potentialGem1;
+}
+
+FTransform APrefab::getPotentialGem2()
+{
+	return potentialGem2;
+}
+
+FTransform APrefab::getPotentialSpike1()
+{
+	return potentialSpike1;
+}
+
+FTransform APrefab::getPotentialSpike2()
+{
+	return potentialSpike2;
+}
+
 unsigned int APrefab::noOfConnectors()
 {
 	unsigned int count = 0;
