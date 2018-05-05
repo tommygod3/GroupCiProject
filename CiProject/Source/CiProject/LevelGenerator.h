@@ -59,6 +59,8 @@ protected:
 
 	unsigned int spawned = 0;
 	unsigned int toBeSpawned = 0;
+	unsigned int spikesSpawned = 0;
+	unsigned int gemsSpawned = 0;
 
 	TArray<FworldSpace> spaces;
 
