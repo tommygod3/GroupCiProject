@@ -63,6 +63,5 @@ protected:
 	unsigned int gemsSpawned = 0;
 
 	TArray<FworldSpace> spaces;
-
 };
 

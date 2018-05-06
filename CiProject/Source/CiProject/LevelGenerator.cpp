@@ -30,7 +30,7 @@ void ALevelGenerator::Spawn()
 		return;
 	}
 	//Also return if we are requesting too many gems or spikes (can only have 2 per room)
-	if (2 * NumberOfSpikes > NumberOfRooms || 2 * NumberOfGems > NumberOfRooms)
+	if ( NumberOfSpikes > 2* NumberOfRooms || NumberOfGems > 2* NumberOfRooms)
 	{
 		return;
 	}
@@ -205,8 +205,81 @@ void ALevelGenerator::worldSpawnPrefab(unsigned int prefabNo, FVector location, 
 	FActorSpawnParameters SpawnInfo;
 	world->SpawnActor<APrefab>(Prefabs[prefabNo], location, Rotation, SpawnInfo);
 
-	worldSpawnGems(prefabNo, 1, location, world);
-	worldSpawnSpikes(prefabNo, 1, location, world);
+	//Choose how many gems and spikes to spawn
+	//1.2 gems
+	if (NumberOfGems > gemsSpawned)
+	{
+		if (2 * (NumberOfRooms - spawned) > (NumberOfGems-gemsSpawned+1))
+		{
+			if (NumberOfGems - gemsSpawned == 1)
+			{
+				if (NumberOfRooms - spawned == 1)
+				{
+					worldSpawnGems(prefabNo, 1, location, world);
+				}
+			}
+			else
+			{
+				int decider = rand() % 100 + 1;
+				if (decider <= 20)
+				{
+
+				}
+				else if (decider <= 60)
+				{
+					worldSpawnGems(prefabNo, 1, location, world);
+				}
+				else
+				{
+					worldSpawnGems(prefabNo, 2, location, world);
+				}
+			}
+			
+		}
+		else
+		{
+			if (2 * (NumberOfRooms - spawned) <= (NumberOfGems - gemsSpawned))
+			{
+				worldSpawnGems(prefabNo, 2, location, world);
+			}
+			else
+			{
+				worldSpawnGems(prefabNo, 1, location, world);
+			}
+		}
+	}
+	//1.55 spikes
+	if (NumberOfSpikes > spikesSpawned)
+	{
+		if (2 * (NumberOfRooms-spawned) >= NumberOfSpikes)
+		{
+			int decider = rand() % 100 + 1;
+			if (decider <= 5)
+			{
+
+			}
+			else if (decider <= 40)
+			{
+				worldSpawnSpikes(prefabNo, 1, location, world);
+			}
+			else
+			{
+				if (NumberOfSpikes - spikesSpawned == 1)
+				{
+					worldSpawnSpikes(prefabNo, 1, location, world);
+				}
+				else
+				{
+					worldSpawnSpikes(prefabNo, 2, location, world);
+				}
+			}
+		}
+		else
+		{
+			worldSpawnSpikes(prefabNo, 2, location, world);
+		}
+	}
+	
 
 	//Increment number spawned and decrement number of prefabs in spawning process
 	spawned++;
@@ -234,6 +307,7 @@ void ALevelGenerator::worldSpawnGems(unsigned int prefabNo, unsigned int numOfGe
 			FVector gemLocation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialGem2.GetLocation() + location;
 			world->SpawnActor<AActor>(gemBP, gemLocation, Rotation, SpawnInfo);
 		}
+		gemsSpawned++;
 	}
 	else if (numOfGems == 2)
 	{
@@ -242,6 +316,8 @@ void ALevelGenerator::worldSpawnGems(unsigned int prefabNo, unsigned int numOfGe
 
 		FVector gemLocationSecond = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialGem2.GetLocation() + location;
 		world->SpawnActor<AActor>(gemBP, gemLocationSecond, Rotation, SpawnInfo);
+		gemsSpawned++;
+		gemsSpawned++;
 	}
 	else
 	{
@@ -272,6 +348,7 @@ void ALevelGenerator::worldSpawnSpikes(unsigned int prefabNo, unsigned int numOf
 			FRotator spikeRotation = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike2.GetRotation().Rotator();
 			world->SpawnActor<AActor>(spikeBP, spikeLocation, spikeRotation, SpawnInfo);
 		}
+		spikesSpawned++;
 	}
 	else if (numOfSpikes == 2)
 	{
@@ -282,6 +359,9 @@ void ALevelGenerator::worldSpawnSpikes(unsigned int prefabNo, unsigned int numOf
 		FVector spikeLocationSecond = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike2.GetLocation() + location;
 		FRotator spikeRotationSecond = Prefabs[prefabNo]->GetDefaultObject<APrefab>()->potentialSpike2.GetRotation().Rotator();
 		world->SpawnActor<AActor>(spikeBP, spikeLocationSecond, spikeRotationSecond, SpawnInfo);
+
+		spikesSpawned++;
+		spikesSpawned++;
 	}
 	else
 	{
