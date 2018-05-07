@@ -279,8 +279,6 @@ void ALevelGenerator::worldSpawnPrefab(unsigned int prefabNo, FVector location, 
 			worldSpawnSpikes(prefabNo, 2, location, world);
 		}
 	}
-	
-
 	//Increment number spawned and decrement number of prefabs in spawning process
 	spawned++;
 	toBeSpawned--;
